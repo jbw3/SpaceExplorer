@@ -15,7 +15,7 @@ class AAdjuster(games.Animation):
 
 class Moon(SAdjuster):
     all = []
-    def __init__(self, left):            
+    def __init__(self, left):
         super(Moon, self).__init__(games.load_image("images/moon.bmp"),
                                    left=left, bottom=480)
         self.terrain = True
@@ -48,8 +48,8 @@ class Hole(SAdjuster):
     def update(self):
         for sprite in self.overlapping_sprites:
             if sprite.left > self.left + 2 and sprite.right < self.right - 2:
-                sprite.y += 1                
-            
+                sprite.y += 1
+
 
 class Man(games.Sprite):
     SPEED = 1
@@ -76,7 +76,7 @@ class Man(games.Sprite):
                     sprite.adjust(dx)
 
     def update(self):
-        # make man move right    
+        # make man move right
         if games.keyboard.is_pressed(games.K_RIGHT):
             # make sure image is man_image_right
             if self.image == self.man_image_left:
@@ -169,7 +169,7 @@ class Man(games.Sprite):
         # make man die if he falls below the screen
         if self.top > games.screen.height:
             self.die()
-                
+
     def die(self):
         self.game.lives -= 1
         self.destroy()
@@ -222,7 +222,7 @@ class Robot(SAdjuster):
               if self.left == self.left_boundry:
                 self.going_right = True
 
-              # move sprite   
+              # move sprite
               if self.going_right == True:
                 if self.image == self.left_image:
                   self.image = self.right_image
@@ -240,7 +240,7 @@ class Robot(SAdjuster):
             if self.top < self.game.man.y < self.bottom and self.x - 380 <= self.game.man.x <= self.x:
               if self.image == self.right_image:
                   self.image = self.left_image
-              self.shooting_right = False  
+              self.shooting_right = False
               self.is_shooting = True
 
               can_shoot = True
@@ -255,11 +255,11 @@ class Robot(SAdjuster):
                 games.screen.add(laser)
                 # reset timer
                 self.timer = 25
-              
+
             elif self.top < self.game.man.y < self.bottom and self.x + 380 >= self.game.man.x > self.x:
               if self.image == self.left_image:
                   self.image = self.right_image
-              self.shooting_right = True  
+              self.shooting_right = True
               self.is_shooting = True
 
               can_shoot = True
@@ -274,7 +274,7 @@ class Robot(SAdjuster):
                 games.screen.add(laser)
                 # reset timer
                 self.timer = 25
-                
+
             else:
               self.is_shooting = False
 
@@ -300,17 +300,17 @@ class Robot(SAdjuster):
                     self.set_image(self.right_dead)
                 else:
                     self.set_image(self.left_dead)
-                    
+
             else:
                 if self.going_right:
                     self.set_image(self.right_dead)
                 else:
                     self.set_image(self.left_dead)
-                
+
             if self.angle != 40:
                 self.angle += 2
             self.y += 2
-            
+
         if self.top > games.screen.height:
             self.destroy()
 
@@ -344,49 +344,49 @@ class Bomb_dropper(SAdjuster):
 
     def update(self):
         # determine which way to move
-	if self.right == self.right_boundry:
-	    self.going_right = False
-	if self.left == self.left_boundry:
-	    self.going_right = True
+        if self.right == self.right_boundry:
+            self.going_right = False
+        if self.left == self.left_boundry:
+            self.going_right = True
 
-	# move sprite   
-	if self.going_right == True:
-	    if self.image == self.image_left1:
-		self.image = self.image_right1
-	    elif self.image == self.image_left2:
-		self.image = self.image_right2
-	    self.x += 1
-	else:
-	    if self.get_image() == self.image_right1:
-		self.set_image(self.image_left1)
-	    elif self.get_image() == self.image_right2:
-		self.set_image(self.image_left2)
-	    self.x -= 1
+        # move sprite
+        if self.going_right == True:
+            if self.image == self.image_left1:
+                self.image = self.image_right1
+            elif self.image == self.image_left2:
+                self.image = self.image_right2
+            self.x += 1
+        else:
+            if self.get_image() == self.image_right1:
+                self.set_image(self.image_left1)
+            elif self.get_image() == self.image_right2:
+                self.set_image(self.image_left2)
+            self.x -= 1
 
-	# allow robot to drop bombs
-	if self.timer > 0:
-	    self.timer -= 1
-	if self.timer == 0:
-	    self.timer = 75
+        # allow robot to drop bombs
+        if self.timer > 0:
+            self.timer -= 1
+        if self.timer == 0:
+            self.timer = 75
 
-	if self.timer < 25:
+        if self.timer < 25:
             top = self.top
-	    if self.going_right:
-		self.set_image(self.image_right2)
-	    else:
-		self.set_image(self.image_left2)
-	    self.top = top
-	    if self.timer == 12:
-		bomb = Bomb1(self, x = self.x, y = self.y + 28)
-		games.screen.add(bomb)
-	    
-	else:
+            if self.going_right:
+                self.set_image(self.image_right2)
+            else:
+                self.set_image(self.image_left2)
+            self.top = top
+            if self.timer == 12:
+                bomb = Bomb1(self, x = self.x, y = self.y + 28)
+                games.screen.add(bomb)
+
+        else:
             top = self.top
-	    if self.going_right:
-		self.set_image(self.image_right1)
-	    else:
-		self.set_image(self.image_left1)
-	    self.top = top
+            if self.going_right:
+                self.set_image(self.image_right1)
+            else:
+                self.set_image(self.image_left1)
+            self.top = top
 
     def adjust(self, dx):
         super(Bomb_dropper, self).adjust(dx)
@@ -452,30 +452,30 @@ class Explosion(AAdjuster):
 
     def update(self):
         if self.overlaps(self.game.man):
-	    self.game.man.die()
+            self.game.man.die()
 
 class Bomb1(SAdjuster):
     def __init__(self, ship, x, y):
         self.ship = ship
-	self.bomb_image = games.load_image("images/bomb.bmp")
-	super(Bomb1, self).__init__(image=self.bomb_image, x=x, y=y)
-	self.terrain = False
-	self.go_through = True
-	self.hole = False
+        self.bomb_image = games.load_image("images/bomb.bmp")
+        super(Bomb1, self).__init__(image=self.bomb_image, x=x, y=y)
+        self.terrain = False
+        self.go_through = True
+        self.hole = False
 
     def update(self):
-	super(Bomb1, self).update()
-	if not self.overlapping_sprites:
-	    self.y += 2
-	elif self.overlaps(self.ship):
-	    self.y += 2
-	elif self.overlapping_sprites:
-	    explosion = Explosion(self.ship.game, x=self.x, y=self.y)
-	    games.screen.add(explosion)
-	    self.destroy()
+        super(Bomb1, self).update()
+        if not self.overlapping_sprites:
+            self.y += 2
+        elif self.overlaps(self.ship):
+            self.y += 2
+        elif self.overlapping_sprites:
+            explosion = Explosion(self.ship.game, x=self.x, y=self.y)
+            games.screen.add(explosion)
+            self.destroy()
 
 class VElevator(SAdjuster):
-    def __init__(self, color, x, y, bt, bb):            
+    def __init__(self, color, x, y, bt, bb):
         super(VElevator, self).__init__(games.load_image("images/"+color+"_elevator.bmp"),
                                         x=x, y=y)
         self.terrain = True
@@ -543,7 +543,7 @@ class Button(SAdjuster):
 
         self.button_image = games.load_image("images/"+color+"_button.bmp")
         self.button_image_pressed = games.load_image("images/"+color+"_button(pressed).bmp")
-                    
+
         self.image_bottom = bottom
         super(Button, self).__init__(
             image = self.button_image,
@@ -922,4 +922,4 @@ def main():
     game = Game()
     games.screen.mainloop()
 
-main()                
+main()
