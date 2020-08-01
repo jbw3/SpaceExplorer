@@ -3,7 +3,7 @@
 from livewires import games, color
 import os.path
 
-games.init(640, 480, 50)#, "Space Explorer")
+games.init(640, 480, 50)
 
 class SAdjuster(games.Sprite):
     def adjust(self, dx):
@@ -16,8 +16,8 @@ class AAdjuster(games.Animation):
 class Moon(SAdjuster):
     all = []
     def __init__(self, left):
-        super(Moon, self).__init__(games.load_image("images/moon.bmp"),
-                                   left=left, bottom=480)
+        super(Moon, self).__init__(games.load_image(os.path.join("images", "moon.bmp")),
+                                   left=left, bottom=games.screen.height)
         self.terrain = True
         self.go_through = False
         self.hole = False
@@ -31,7 +31,7 @@ class Moon(SAdjuster):
 class Hill(SAdjuster):
     def __init__(self, num, x, bottom, go_through):
         # num is width-height-design
-        super(Hill, self).__init__(games.load_image("images/hill"+num+".bmp"),
+        super(Hill, self).__init__(games.load_image(os.path.join("images", "hill"+num+".bmp")),
                                    x=x, bottom=bottom)
         self.terrain = True
         self.go_through = go_through
@@ -39,7 +39,7 @@ class Hill(SAdjuster):
 
 class Hole(SAdjuster):
     def __init__(self, num, x, bottom):
-        super(Hole, self).__init__(games.load_image("images/hole"+str(num)+".bmp"),
+        super(Hole, self).__init__(games.load_image(os.path.join("images", "hole"+str(num)+".bmp")),
                                     x=x, bottom=bottom)
         self.terrain = False
         self.go_through = False
@@ -55,8 +55,8 @@ class Man(games.Sprite):
     SPEED = 1
     def __init__(self, game, bottom):
         self.game = game
-        self.man_image_right = games.load_image("images/space_man(right).bmp")
-        self.man_image_left = games.load_image("images/space_man(left).bmp")
+        self.man_image_right = games.load_image(os.path.join("images", "space_man(right).bmp"))
+        self.man_image_left = games.load_image(os.path.join("images", "space_man(left).bmp"))
         super(Man, self).__init__(image = self.man_image_right,
                                   x = 20,
                                   bottom = bottom)
@@ -170,7 +170,16 @@ class Man(games.Sprite):
         if self.top > games.screen.height:
             self.die()
 
+        #temp#
+        if games.keyboard.is_pressed(games.K_UP):
+            self.y -= 4
+        ######
+
     def die(self):
+        #temp#
+        if games.keyboard.is_pressed(games.K_RALT):
+            return
+        ######
         self.game.lives -= 1
         self.destroy()
         for sprite in games.screen.all_objects:
@@ -192,10 +201,10 @@ class Robot(SAdjuster):
     all = []
     def __init__(self, game, x, bottom, br, bl):
         self.game = game
-        self.right_image = games.load_image("images/robot(right).bmp")
-        self.left_image = games.load_image("images/robot(left).bmp")
-        self.right_dead = games.load_image("images/robot_dead(right).bmp")
-        self.left_dead = games.load_image("images/robot_dead(left).bmp")
+        self.right_image = games.load_image(os.path.join("images", "robot(right).bmp"))
+        self.left_image = games.load_image(os.path.join("images", "robot(left).bmp"))
+        self.right_dead = games.load_image(os.path.join("images", "robot_dead(right).bmp"))
+        self.left_dead = games.load_image(os.path.join("images", "robot_dead(left).bmp"))
         super(Robot, self).__init__(image=self.left_image, x=x, bottom=bottom)
         self.terrain = False
         self.br = br
@@ -214,6 +223,10 @@ class Robot(SAdjuster):
         Robot.all.append(self)
 
     def update(self):
+        ### temp ###
+        if games.keyboard.is_pressed(games.K_F1):
+            self.die()
+        ############
         if not self.dead:
             if not self.is_shooting:
               # determine which way to move
@@ -329,10 +342,10 @@ class Robot(SAdjuster):
 class Bomb_dropper(SAdjuster):
     def __init__(self, game, x, top, bl, br):
         self.game = game
-        self.image_left1 = games.load_image("images/bomb_dropper(left)1.bmp")
-        self.image_left2 = games.load_image("images/bomb_dropper(left)2.bmp")
-        self.image_right1 = games.load_image("images/bomb_dropper(right)1.bmp")
-        self.image_right2 = games.load_image("images/bomb_dropper(right)2.bmp")
+        self.image_left1 = games.load_image(os.path.join("images", "bomb_dropper(left)1.bmp"))
+        self.image_left2 = games.load_image(os.path.join("images", "bomb_dropper(left)2.bmp"))
+        self.image_right1 = games.load_image(os.path.join("images", "bomb_dropper(right)1.bmp"))
+        self.image_right2 = games.load_image(os.path.join("images", "bomb_dropper(right)2.bmp"))
         super(Bomb_dropper, self).__init__(self.image_left1, x=x, top=top)
         self.terrain = False
         self.go_through = True
@@ -397,7 +410,7 @@ class Laser(SAdjuster):
     SPEED = 5
     def __init__(self, game, color, x, y, direction):
         self.game = game
-        super(Laser, self).__init__(games.load_image("images/"+color+"_laser.bmp", False),
+        super(Laser, self).__init__(games.load_image(os.path.join("images", color+"_laser.bmp"), False),
                                     x=x, y=y, dx=Laser.SPEED*direction)
         self.terrain = False
         self.go_through = True
@@ -421,10 +434,10 @@ class Sparks(AAdjuster):
     images = games.load_animation([os.path.join("images", "sparks1.bmp"),
                                    os.path.join("images", "sparks2.bmp"),
                                    os.path.join("images", "sparks3.bmp"),
-                                   "images/sparks4.bmp",
-                                   "images/sparks5.bmp",
-                                   "images/sparks6.bmp",
-                                   "images/sparks7.bmp"])
+                                   os.path.join("images", "sparks4.bmp"),
+                                   os.path.join("images", "sparks5.bmp"),
+                                   os.path.join("images", "sparks6.bmp"),
+                                   os.path.join("images", "sparks7.bmp")])
     def __init__(self, x, y):
         super(Sparks, self).__init__(Sparks.images, x=x, y=y, repeat_interval=2,
                                      n_repeats=1, is_collideable=False)
@@ -457,7 +470,7 @@ class Explosion(AAdjuster):
 class Bomb1(SAdjuster):
     def __init__(self, ship, x, y):
         self.ship = ship
-        self.bomb_image = games.load_image("images/bomb.bmp")
+        self.bomb_image = games.load_image(os.path.join("images", "bomb.bmp"))
         super(Bomb1, self).__init__(image=self.bomb_image, x=x, y=y)
         self.terrain = False
         self.go_through = True
@@ -476,7 +489,7 @@ class Bomb1(SAdjuster):
 
 class VElevator(SAdjuster):
     def __init__(self, color, x, y, bt, bb):
-        super(VElevator, self).__init__(games.load_image("images/"+color+"_elevator.bmp"),
+        super(VElevator, self).__init__(games.load_image(os.path.join("images", color+"_elevator.bmp")),
                                         x=x, y=y)
         self.terrain = True
         self.go_through = True
@@ -503,7 +516,7 @@ class VElevator(SAdjuster):
 
 class HElevator(SAdjuster):
     def __init__(self, color, x, y, br, bl, moving_right=False):
-        super(HElevator, self).__init__(games.load_image("images/"+color+"_elevator.bmp"),
+        super(HElevator, self).__init__(games.load_image(os.path.join("images", color+"_elevator.bmp")),
                                         x=x, y=y)
         self.terrain = True
         self.go_through = True
@@ -541,8 +554,8 @@ class Button(SAdjuster):
         self.game = game
         self.elevator = elevator
 
-        self.button_image = games.load_image("images/"+color+"_button.bmp")
-        self.button_image_pressed = games.load_image("images/"+color+"_button(pressed).bmp")
+        self.button_image = games.load_image(os.path.join("images", color+"_button.bmp"))
+        self.button_image_pressed = games.load_image(os.path.join("images", color+"_button(pressed).bmp"))
 
         self.image_bottom = bottom
         super(Button, self).__init__(
@@ -563,7 +576,7 @@ class Platform(SAdjuster):
     TIMER = 40
     def __init__(self, game, left, top):
         self.game = game
-        super(Platform, self).__init__(games.load_image("images/platform.bmp"),
+        super(Platform, self).__init__(games.load_image(os.path.join("images", "platform.bmp")),
                                        left=left, top=top)
         self.orig_left = left
         self.orig_top = top
@@ -595,7 +608,7 @@ class Platform(SAdjuster):
 class End_piece(SAdjuster):
     def __init__(self, game, x, bottom):
         self.game = game
-        super(End_piece, self).__init__(games.load_image("images/oval.bmp"),
+        super(End_piece, self).__init__(games.load_image(os.path.join("images", "oval.bmp")),
                                         x=x, bottom=bottom)
         self.terrain = False
         self.go_through = True
@@ -609,8 +622,9 @@ class End_piece(SAdjuster):
 
 class Game(object):
     def __init__(self):
-        self.level = 0
-        self.levels = [self.level1, self.level2, self.level3, self.level4]
+        self.level = 4#temp
+        self.levels = [self.level1, self.level2, self.level3, self.level4,
+                       self.level5]
         self.lives = 1
         self.info_sprites = []
         self.next()
@@ -642,6 +656,10 @@ class Game(object):
         self.info_sprites = []
         text = games.Text("Lives: "+str(self.lives), 30, color.red, left=10,
                           top=10, is_collideable=False)
+        games.screen.add(text)
+        self.info_sprites.append(text)
+        text = games.Text("Level "+str(self.level), 30, color.red,
+                          x=games.screen.width/2, top=10, is_collideable=False)
         games.screen.add(text)
         self.info_sprites.append(text)
 
@@ -916,6 +934,47 @@ class Game(object):
         games.screen.add(self.man)
 
         end_piece = End_piece(self, Moon.all[-1].right-50, Moon.all[-1].top-10)
+        games.screen.add(end_piece)
+
+    def level5(self):
+        # patrol distance below: 300
+        # patrol distance above: 350
+        # patrol distance with 2: 300
+        # patrol distance with 3: 300
+        games.screen.clear()
+        self.display_info()
+        moon = Moon(0)
+        games.screen.add(moon)
+        hill = Hill("4-4-1", 550, Moon.all[0].top+1, True)
+        games.screen.add(hill)
+        hill = Hill("4-1-2", 300, Moon.all[0].top+4, False)
+        games.screen.add(hill)
+        hole = Hole(6, 963, Moon.all[0].bottom)
+        games.screen.add(hole)
+        hill = Hill("2-5-1", 1175, Moon.all[0].top+1, True)
+        games.screen.add(hill)
+        hill = Hill("1-3-1", 1175, hill.top+1, True)
+        games.screen.add(hill)
+        hole = Hole(6, 1387, Moon.all[0].bottom)
+        games.screen.add(hole)
+        hill = Hill("4-3-1", 1800, Moon.all[0].top+1, True)
+        games.screen.add(hill)
+
+        robot = Robot(self, 275, Moon.all[0].top-49, 175, 175)
+        games.screen.add(robot)
+        robot = Robot(self, 650, Moon.all[0].top+1, 150, 150)
+        games.screen.add(robot)
+        robot = Robot(self, 700, Moon.all[0].top+1, 150, 150)
+        games.screen.add(robot)
+        robot = Robot(self, 750, Moon.all[0].top+1, 150, 150)
+        games.screen.add(robot)
+        robot = Robot(self, 600, Moon.all[0].top-199, 150, 150)
+        games.screen.add(robot)
+
+        self.man = Man(self, Moon.all[0].top+1)
+        games.screen.add(self.man)
+
+        end_piece = End_piece(self, 1175, Moon.all[-1].top-410)
         games.screen.add(end_piece)
 
 def main():
